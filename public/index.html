@@ -115,6 +115,12 @@
             </p>
           </article>
         </section>
+        <section>
+          <h1>Top 10 watched sports in the world using D3Js</h1>
+          <p>
+            <svg id="donut-chart" width="400" height="400"></svg>
+          </p>
+        </section>
       </div>
     </main>
 
@@ -132,7 +138,7 @@
       integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg=="
       crossorigin="anonymous"
     ></script>
-
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
       const dataSource = {
         labels: [],
@@ -168,8 +174,75 @@
           }
         });
       }
-
       getBudget();
+
+      function getSportsData() {
+        var apiUrl = "/budget";
+        axios.get(apiUrl).then(function (res) {
+          console.log(res.data.dy_data);
+          // Set up the SVG container and dimensions
+          var width = 400;
+          var height = 400;
+          var radius = Math.min(width, height) / 2;
+          const data = res.data.dy_data;
+          var svg = d3
+            .select("#donut-chart")
+            .append("g")
+            .attr(
+              "transform",
+              "translate(" + width / 2 + "," + height / 2 + ")"
+            );
+
+          // Create a color scale for the chart
+          var color = d3
+            .scaleOrdinal()
+            .domain(
+              data.map(function (d) {
+                return d.label;
+              })
+            )
+            .range(
+              data.map(function (d) {
+                return d.background;
+              })
+            );
+          // Create an arc generator
+          var arc = d3
+            .arc()
+            .innerRadius(radius - 80)
+            .outerRadius(radius);
+
+          // Create a pie layout
+          var pie = d3.pie().value(function (d) {
+            return d.value;
+          });
+
+          // Create and append the arcs to the SVG container
+          var arcs = svg.selectAll("arc").data(pie(data)).enter().append("g");
+
+          arcs
+            .append("path")
+            .attr("d", arc)
+            .attr("fill", function (d) {
+              return color(d.data.label);
+            });
+
+          // Add labels to the arcs
+          arcs
+            .append("text")
+            .attr("transform", function (d) {
+              return "translate(" + arc.centroid(d) + ")";
+            })
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+              return d.data.label;
+            });
+          d3.json("/chartData.json").then(function (data) {
+            console.log(data);
+          });
+        });
+      }
+      getSportsData();
     </script>
   </body>
 </html>
