@@ -4,25 +4,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = 3000;
-
+const chart_Data = require("./chartData.json");
+var pie_chartData = chart_Data;
+var dJs_data = chart_Data.DChart;
 app.use(cors());
-
-const budget = {
-  myBudget: [
-    {
-      title: "Eat out",
-      budget: 25,
-    },
-    {
-      title: "Rent",
-      budget: 275,
-    },
-    {
-      title: "Grocery",
-      budget: 110,
-    },
-  ],
-};
 
 app.use("/", express.static("public"));
 app.get("/hello", (req, res) => {
@@ -30,7 +15,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/budget", (req, res) => {
-  res.json(budget);
+  res.json(pie_chartData);
 });
 
 app.listen(port, () => {
