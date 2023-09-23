@@ -7,6 +7,7 @@ const port = 3000;
 const chart_Data = require("./chartData.json");
 var pie_chartData = chart_Data;
 var dJs_data = chart_Data.DChart;
+
 app.use(cors());
 
 app.use("/", express.static("public"));

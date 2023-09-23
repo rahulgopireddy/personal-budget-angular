@@ -163,13 +163,11 @@
       function getBudget() {
         var apiUrl = "/budget";
         axios.get(apiUrl).then(function (res) {
-          console.log(res.data.myBudget.length);
           for (var i = 0; i < res.data.myBudget.length; i++) {
             dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
             dataSource.labels[i] = res.data.myBudget[i].title;
             dataSource.datasets[0].backgroundColor[i] =
               res.data.myBudget[i].colorCode;
-            console.log(dataSource);
             createChart();
           }
         });
@@ -179,7 +177,6 @@
       function getSportsData() {
         var apiUrl = "/budget";
         axios.get(apiUrl).then(function (res) {
-          console.log(res.data.dy_data);
           // Set up the SVG container and dimensions
           var width = 400;
           var height = 400;
@@ -237,9 +234,6 @@
             .text(function (d) {
               return d.data.label;
             });
-          d3.json("/chartData.json").then(function (data) {
-            console.log(data);
-          });
         });
       }
       getSportsData();
